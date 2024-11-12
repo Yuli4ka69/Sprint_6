@@ -3,7 +3,7 @@ import allure
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from pages.home_page import HomePage
-
+from urls import ORDER_URL
 class TestLogoNavigation:
 
     @pytest.fixture(autouse=True)
@@ -18,7 +18,7 @@ class TestLogoNavigation:
         home_page = HomePage(self.driver)
 
         with allure.step("Открытие страницы заказа"):
-            self.driver.get("https://qa-scooter.praktikum-services.ru/order")
+            self.driver.get(ORDER_URL)
 
         with allure.step("Клик по логотипу Scooter"):
             home_page.click_logo_scooter()

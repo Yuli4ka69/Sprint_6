@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from selenium import webdriver
 from pages.order_page import OrderFormPage
 from locators import OrderFormPageLocators
-
+from urls import BASE_URL
 
 class TestOrderProcess:
     @pytest.fixture(autouse=True)
@@ -13,7 +13,7 @@ class TestOrderProcess:
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(10)
         self.page = OrderFormPage(self.driver)
-        self.driver.get("https://qa-scooter.praktikum-services.ru/")
+        self.driver.get(BASE_URL)
 
     @allure.title("Тест на оформление заказа с различными параметрами")
     @allure.description("Тест проверяет оформление заказа через верхнюю или нижнюю кнопку, "

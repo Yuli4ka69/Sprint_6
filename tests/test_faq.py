@@ -5,7 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from pages.faq_page import FAQPage
 from locators import FAQPageLocators
-
+from urls import BASE_URL
 
 class TestFAQ:
 
@@ -20,7 +20,7 @@ class TestFAQ:
     def test_all_faq_questions(self):
         faq_page = FAQPage(self.driver)
         with allure.step("Открытие страницы FAQ"):
-            self.driver.get('https://qa-scooter.praktikum-services.ru/')
+            self.driver.get(BASE_URL)
 
         with allure.step("Ожидание загрузки и прокрутка к разделу FAQ"):
             faq_section = WebDriverWait(self.driver, 20).until(
