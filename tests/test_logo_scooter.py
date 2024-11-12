@@ -1,9 +1,8 @@
 import pytest
 import allure
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
 from pages.home_page import HomePage
-from urls import ORDER_URL
+
 class TestLogoNavigation:
 
     @pytest.fixture(autouse=True)
@@ -18,16 +17,13 @@ class TestLogoNavigation:
         home_page = HomePage(self.driver)
 
         with allure.step("Открытие страницы заказа"):
-            self.driver.get(ORDER_URL)
+            home_page.open_order_page()
 
         with allure.step("Клик по логотипу Scooter"):
             home_page.click_logo_scooter()
 
         with allure.step("Проверка, что текущий URL равен главной странице"):
-            WebDriverWait(self.driver, 10).until(
-                lambda driver: driver.current_url == "https://qa-scooter.praktikum-services.ru/"
-            )
-            assert self.driver.current_url == "https://qa-scooter.praktikum-services.ru/"
+            home_page.verify_redirect_to_main_page()
             allure.attach(self.driver.current_url, name="Фактический URL", attachment_type=allure.attachment_type.TEXT)
 
     def teardown_method(self):

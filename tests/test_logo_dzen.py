@@ -1,10 +1,8 @@
 import pytest
 import allure
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from pages.home_page import HomePage
-from urls import ORDER_URL
+
 class TestLogoNavigation:
 
     @pytest.fixture(autouse=True)
@@ -19,22 +17,15 @@ class TestLogoNavigation:
         home_page = HomePage(self.driver)
 
         with allure.step("Открытие страницы заказа"):
-            self.driver.get(ORDER_URL)
+            home_page.open_order_page()
             original_window = self.driver.current_window_handle
 
         with allure.step("Клик по логотипу Яндекс"):
             home_page.click_logo_yandex()
 
-        with allure.step("Ожидание открытия нового окна"):
-            WebDriverWait(self.driver, 10).until(EC.new_window_is_opened([original_window]))
-            new_window = [window for window in self.driver.window_handles if window != original_window][0]
-            self.driver.switch_to.window(new_window)
-
-        with allure.step("Проверка, что текущий URL равен ожидаемому"):
-            WebDriverWait(self.driver, 10).until(
-                lambda driver: driver.current_url == "https://dzen.ru/?yredirect=true"
-            )
-            assert self.driver.current_url == "https://dzen.ru/?yredirect=true"
+        with allure.step("Переход на новую вкладку и проверка URL"):
+            home_page.switch_to_new_window()
+            home_page.verify_redirect_to_yandex()
             allure.attach(self.driver.current_url, name="Фактический URL", attachment_type=allure.attachment_type.TEXT)
 
         with allure.step("Закрытие новой вкладки и возврат на исходную"):

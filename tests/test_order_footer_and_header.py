@@ -4,7 +4,6 @@ from datetime import datetime, timedelta
 from selenium import webdriver
 from pages.order_page import OrderFormPage
 from locators import OrderFormPageLocators
-from urls import BASE_URL
 
 def get_order_date(date_option):
     """Возвращает дату заказа в зависимости от переданного параметра"""
@@ -21,7 +20,7 @@ class TestOrderProcess:
         self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(10)
         self.page = OrderFormPage(self.driver)
-        self.driver.get(BASE_URL)
+        self.page.open_order_page()  # Открываем страницу заказа через метод в Page Object
 
     @allure.title("Тест на оформление заказа с различными параметрами")
     @allure.description("Тест проверяет оформление заказа через верхнюю или нижнюю кнопку, "
@@ -37,7 +36,7 @@ class TestOrderProcess:
         user_data = generate_user_data
 
         with allure.step("Нажатие на кнопку начала заказа"):
-            self.page._click_element(start_button)
+            self.page.click_start_button(start_button)
 
         with allure.step("Заполнение имени и фамилии"):
             self.page.fill_name(user_data["name"])
@@ -54,7 +53,7 @@ class TestOrderProcess:
             self.page.click_next()
 
         with allure.step("Выбор даты заказа"):
-            order_date = get_order_date(date)
+            order_date = get_order_date(date)  # Получаем нужную дату
             self.page.fill_date(order_date)
 
         with allure.step("Выбор срока аренды"):

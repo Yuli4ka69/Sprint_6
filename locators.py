@@ -4,6 +4,8 @@ class FAQPageLocators:
     FAQ_SECTION = (By.CLASS_NAME, "Home_FAQ__3uVm4")
     QUESTION = (By.CSS_SELECTOR, ".accordion__item .accordion__question")
     ANSWER = (By.CSS_SELECTOR, ".accordion__item .accordion__answer")
+    QUESTION_XPATH_TEMPLATE = '//div[contains(@class, "accordion__button") and text()="{question_text}"]'
+    ANSWER_XPATH_TEMPLATE = '//*[@id="{answer_id}"]'
 
 class HomePageLocators:
     ORDER_BUTTON_TOP = (By.CLASS_NAME, 'button_order_top')
@@ -32,3 +34,5 @@ class OrderFormPageLocators:
     CONFIRM_MODAL = (By.CLASS_NAME, "Order_Modal__YZ-d3")
     ORDER_CONFIRMATION_TEXT = (By.CLASS_NAME, "Order_ModalHeader__3FDaJ")
     VIEW_STATUS_BUTTON = (By.XPATH, '//button[contains(@class, "Button_Button__ra12g") and text()="Посмотреть статус"]')
+    DATE_FIELD = (By.CSS_SELECTOR, 'input[placeholder="* Когда привезти самокат"]')
+    DATE_PICKER_DAY_TEMPLATE = '//div[contains(@class, "react-datepicker__day") and text()="{}"]'  # Шаблон для дня

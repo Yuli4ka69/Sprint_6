@@ -3,6 +3,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from pages.base_page import BasePage
+from locators import FAQPageLocators
+from urls import BASE_URL
 
 class FAQPage(BasePage):
     QUESTIONS_TEXT = [
@@ -27,24 +29,30 @@ class FAQPage(BasePage):
         "Да, обязательно. Всем самокатов! И Москве, и Московской области."
     ]
 
+    def open(self):
+        """Открывает страницу FAQ"""
+        self.driver.get(BASE_URL)
+
+    def wait_for_faq_section(self):
+        """Ожидает загрузки и прокручивает страницу до раздела FAQ"""
+        faq_section = WebDriverWait(self.driver, 20).until(
+            EC.presence_of_element_located((FAQPageLocators.FAQ_SECTION[0], FAQPageLocators.FAQ_SECTION[1]))
+        )
+        self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", faq_section)
+
     def click_question(self, index):
         """Находит вопрос по тексту и кликает на него, используя наведение и JavaScript."""
         question_text = self.QUESTIONS_TEXT[index]
-        question_xpath = f'//div[contains(@class, "accordion__button") and text()="{question_text}"]'
+        question_xpath = FAQPageLocators.QUESTION_XPATH_TEMPLATE.format(question_text=question_text)
 
-        # Ожидание видимости элемента
         question_element = WebDriverWait(self.driver, 30).until(
             EC.visibility_of_element_located((By.XPATH, question_xpath))
         )
 
-        # Скроллим к элементу и наводим на него курсор
         self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", question_element)
         ActionChains(self.driver).move_to_element(question_element).perform()
-
-        # Клик через JavaScript
         self.driver.execute_script("arguments[0].click();", question_element)
 
-        # Ожидание, чтобы `aria-expanded` установился в "true" после клика
         WebDriverWait(self.driver, 10).until(
             lambda driver: driver.find_element(By.XPATH, question_xpath).get_attribute("aria-expanded") == "true"
         )
@@ -52,12 +60,12 @@ class FAQPage(BasePage):
     def get_answer_text(self, index):
         """Возвращает текст ответа для указанного вопроса, используя `aria-controls`."""
         question_text = self.QUESTIONS_TEXT[index]
-        question_xpath = f'//div[contains(@class, "accordion__button") and text()="{question_text}"]'
+        question_xpath = FAQPageLocators.QUESTION_XPATH_TEMPLATE.format(question_text=question_text)
 
         question_element = self.driver.find_element(By.XPATH, question_xpath)
         answer_id = question_element.get_attribute("aria-controls")
+        answer_xpath = FAQPageLocators.ANSWER_XPATH_TEMPLATE.format(answer_id=answer_id)
 
-        answer_xpath = f'//*[@id="{answer_id}"]'
         answer_element = WebDriverWait(self.driver, 20).until(
             EC.visibility_of_element_located((By.XPATH, answer_xpath))
         )

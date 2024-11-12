@@ -4,8 +4,20 @@ from selenium.webdriver.support import expected_conditions as EC
 from pages.base_page import BasePage
 from selenium.common.exceptions import ElementClickInterceptedException
 from locators import OrderFormPageLocators
+from urls import BASE_URL
 
 class OrderFormPage(BasePage):
+    def open_order_page(self):
+        """Открывает страницу заказа"""
+        self.driver.get(BASE_URL)
+        WebDriverWait(self.driver, 20).until(
+            EC.visibility_of_element_located(OrderFormPageLocators.START_ORDER_HEADER_BUTTON)
+        )
+
+    def click_start_button(self, button_locator):
+        """Кликает на переданную кнопку начала заказа"""
+        self._click_element(button_locator)
+
     def fill_name(self, name):
         self._fill_field(OrderFormPageLocators.NAME_FIELD, name)
 
@@ -42,11 +54,12 @@ class OrderFormPage(BasePage):
 
     def fill_date(self, order_date):
         """Заполняет поле даты заказа и выбирает дату в календаре."""
-
         self._click_element(OrderFormPageLocators.DATE_FIELD)
 
-        date_locator = (
-        By.XPATH, f'//div[contains(@class, "react-datepicker__day") and text()="{order_date.split(".")[0]}"]')
+        # Извлекаем день из order_date и подставляем в шаблон DATE_PICKER_DAY_TEMPLATE
+        day = order_date.split(".")[0]
+        date_locator = (By.XPATH, OrderFormPageLocators.DATE_PICKER_DAY_TEMPLATE.format(day))
+
         WebDriverWait(self.driver, 10).until(EC.element_to_be_clickable(date_locator)).click()
 
     def select_rental_term(self):

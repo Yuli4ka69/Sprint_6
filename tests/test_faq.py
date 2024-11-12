@@ -1,11 +1,7 @@
 import pytest
 import allure
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from pages.faq_page import FAQPage
-from locators import FAQPageLocators
-from urls import BASE_URL
 
 class TestFAQ:
 
@@ -20,13 +16,10 @@ class TestFAQ:
     def test_all_faq_questions(self):
         faq_page = FAQPage(self.driver)
         with allure.step("Открытие страницы FAQ"):
-            self.driver.get(BASE_URL)
+            faq_page.open()
 
         with allure.step("Ожидание загрузки и прокрутка к разделу FAQ"):
-            faq_section = WebDriverWait(self.driver, 20).until(
-                EC.presence_of_element_located(FAQPageLocators.FAQ_SECTION)
-            )
-            self.driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", faq_section)
+            faq_page.wait_for_faq_section()
 
         with allure.step("Проверка всех вопросов и их ответов"):
             for index in range(len(FAQPage.QUESTIONS_TEXT)):
