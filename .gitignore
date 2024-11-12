@@ -1,0 +1,43 @@
+# Файлы и папки Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+*.log
+*.sqlite3
+*.db
+
+# Виртуальное окружение
+.venv/
+env/
+venv/
+ENV/
+
+# IDE и редакторы
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Allure отчеты и временные файлы
+allure-results/
+allure-report/
+tmp/
+
+# Логи Pytest и временные файлы
+.cache/
+pytest_cache/
+.tox/
+dist/
+build/
+coverage/
+*.cover
+*.coverage
+*.coveragerc
+htmlcov/
+
+# Системные файлы macOS
+.DS_Store
