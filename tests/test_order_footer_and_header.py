@@ -6,6 +6,14 @@ from pages.order_page import OrderFormPage
 from locators import OrderFormPageLocators
 from urls import BASE_URL
 
+def get_order_date(date_option):
+    """Возвращает дату заказа в зависимости от переданного параметра"""
+    if date_option == "today":
+        return datetime.now().strftime("%d.%m.%Y")
+    elif date_option == "tomorrow":
+        return (datetime.now() + timedelta(days=1)).strftime("%d.%m.%Y")
+    return None
+
 class TestOrderProcess:
     @pytest.fixture(autouse=True)
     def setup_method(self):
@@ -46,8 +54,7 @@ class TestOrderProcess:
             self.page.click_next()
 
         with allure.step("Выбор даты заказа"):
-            order_date = datetime.now().strftime("%d.%m.%Y") if date == "today" else (
-                        datetime.now() + timedelta(days=1)).strftime("%d.%m.%Y")
+            order_date = get_order_date(date)
             self.page.fill_date(order_date)
 
         with allure.step("Выбор срока аренды"):
